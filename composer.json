@@ -1,0 +1,33 @@
+{
+    "name": "xapp/orm",
+    "type": "xapp-module",
+    "keywords": ["xapp", "orm"],
+    "homepage": "http://xapp-php.com",
+    "license": "GPL",
+    "support":{
+        "issues": "https://bugs.xapp-php.com:8888",
+        "wiki": "http://www.xapp-php.com/docs/html/"
+    },
+    "config": {
+        "vendor-dir": "lib/vendor"
+    },
+    "require": {
+        "php": ">=5.3.0",
+        "xapp/core": "master"
+    },
+    "repositories": [
+        {
+            "url": "https://github.com/setcooki/xapp-core",
+            "type": "vcs",
+            "version":"master",
+            "packagist": false
+        }
+    ],
+    "autoload": {
+        "psr-0": {
+            "Xapp_Orm": "../.."
+        },
+        "classmap": ["/"]
+    },
+    "minimum-stability": "dev"
+}
