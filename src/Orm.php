@@ -1011,7 +1011,6 @@ class Xapp_Orm
             }else{
                 $sql = $this->tidy($statement);
             }
-
             self::$_queries[] = $sql;
             $start = microtime(true);
             $mode = $this->detect($sql);
@@ -1101,7 +1100,6 @@ class Xapp_Orm
                             return false;
                         }
                     }
-
                     //return pdo statement directly
                     if(is_null($fetchmode)){
                         return $statement;

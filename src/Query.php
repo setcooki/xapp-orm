@@ -634,7 +634,7 @@ abstract class Xapp_Orm_Query
     protected function whereMapper($where, $mask = true)
     {
         $where = (object)$where;
-        
+
         //raw where clause
         if(strtolower($where->type) === 'whereraw')
         {
@@ -803,29 +803,39 @@ abstract class Xapp_Orm_Query
         }
         foreach($value as $key => $val)
         {
-            if($val instanceof Xapp_Orm_Expression)
+            if(!($val instanceof Xapp_Orm_Expression))
             {
-                $wrap[] = (string)$val;
-            }else{
-                $tmp = array();
-                $val = explode('.', (string)$val);
-                foreach($val as $k => $v)
+                //is a single table name or field
+                if(preg_match('/^[a-z0-9\_]{1,}$/i', $val))
                 {
-                    if($k === 0 && count($val) > 1)
-                    {
-                        if($this->_prefix !== null)
-                        {
-                            $v = $v . $this->_prefix;
-                        }
-                        $tmp[] = sprintf($this->_wrapper, $v);
-                    }else{
-                        $tmp[] = ($v !== '*') ? sprintf($this->_wrapper, $v) : $v;
-                    }
+                    $val = sprintf($this->_wrapper, $val);
+                //is a table.field value
+                }else if(strpos($val, '.') !== false){
+                    $val = preg_replace_callback('/([a-z0-9\_]{1,})\.([a-z0-9\_]{1,})/i', array($this, 'wrapCallback'), $val);
                 }
-                $wrap[] = implode('.', $tmp);
             }
+            $wrap[] = (string)$val;
         }
         return implode(', ', $wrap);
+    }
+
+
+    /**
+     * internal callback function for Xapp_Orm_Query::wrap
+     *
+     * @error 13132
+     * @see Xapp_Orm_Query::wrap
+     * @param array $match expects the matches from Xapp_Orm_Query::wrap method
+     * @return string
+     */
+    final protected function wrapCallback($match)
+    {
+        if(preg_match('/[a-z]{1,}/i', $match[0]))
+        {
+            return sprintf($this->_wrapper, (($this->_prefix !== null) ? $this->_prefix . $match[1] : $match[1])) . "." . sprintf($this->_wrapper, $match[2]);
+        }else{
+            return $match[0];
+        }
     }
 
 
