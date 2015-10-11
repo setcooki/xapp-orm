@@ -376,6 +376,13 @@ class Xapp_Orm_Filter
      */
     protected $_join = null;
 
+    /**
+     * if filter uses only one table for operation the table name will be publicly stored in this variable
+     *
+     * @var string
+     */
+    public $table = '';
+
 
     /**
      * construct instance by passing optional table(s) defining the table(s)
@@ -394,6 +401,11 @@ class Xapp_Orm_Filter
         if($table !== null)
         {
             $this->table($table);
+
+        }
+        if($table !== null && (!is_array($table) && !is_object($table)))
+        {
+            $this->table = trim((string)$table);
         }
         $action = strtolower(trim($action));
         if(in_array($action, array('select', 'insert', 'update', 'delete')))
@@ -558,6 +570,7 @@ class Xapp_Orm_Filter
         for($i = 0; $i < sizeof($field); $i++)
         {
             $obj = new XO();
+            $obj->table = $this->table;
             $obj->field = $field[$i];
             $obj->alias = (isset($alias[$i])) ? (string)$alias[$i] : null;
             $this->_field[] = $obj;
@@ -630,6 +643,7 @@ class Xapp_Orm_Filter
             $obj->mask = false;
             $obj->type = __FUNCTION__;
             $obj->connector = null;
+            $obj->table = $this->table;
             $obj->column = $key;
             if(is_array($value))
             {
@@ -765,6 +779,7 @@ class Xapp_Orm_Filter
         for($i = 0; $i < sizeof($column); $i++)
         {
             $obj = new XO();
+            $obj->table = $this->table;
             $obj->column = (string)$column[$i];
             if(!is_array($direction))
             {
@@ -801,6 +816,7 @@ class Xapp_Orm_Filter
         $obj = new XO();
         $obj->mask = false;
         $obj->type = __FUNCTION__;
+        $obj->table = $this->table;
         $obj->column = $column;
         $obj->value = $query;
         $obj->operator = self::mapOperator($operator);
@@ -832,6 +848,7 @@ class Xapp_Orm_Filter
         $obj->mask = true;
         $obj->type = __FUNCTION__;
         $obj->value = array(array($min), array($max));
+        $obj->table = $this->table;
         $obj->column = $column;
         $obj->operator = ((bool)$not) ? self::NOT_BETWEEN : self::BETWEEN;
         $obj->connector = self::mapConnector($connector);
@@ -899,6 +916,7 @@ class Xapp_Orm_Filter
         $obj = new XO();
         $obj->mask = true;
         $obj->type = __FUNCTION__;
+        $obj->table = $this->table;
         $obj->column = $column;
         $obj->value = $value;
         $obj->operator = $operator;
@@ -957,6 +975,7 @@ class Xapp_Orm_Filter
         $obj = new XO();
         $obj->mask = true;
         $obj->type = __FUNCTION__;
+        $obj->table = $this->table;
         $obj->column = $column;
         $obj->value = $this->setValues($value);
         $obj->operator = self::LIKE;
@@ -981,6 +1000,7 @@ class Xapp_Orm_Filter
         $obj = new XO();
         $obj->mask = true;
         $obj->type = __FUNCTION__;
+        $obj->table = $this->table;
         $obj->column = $column;
         $obj->value = $this->setValues($value);
         $obj->operator = self::NOT_LIKE;
@@ -1014,6 +1034,7 @@ class Xapp_Orm_Filter
         $obj = new XO();
         $obj->mask = true;
         $obj->type = __FUNCTION__;
+        $obj->table = $this->table;
         $obj->column = $column;
         $obj->value = $this->setValues($value);
         $obj->operator = self::MATCH_AGAINST;
@@ -1039,6 +1060,7 @@ class Xapp_Orm_Filter
         foreach((array)$column as $c)
         {
             $obj = new XO();
+            $obj->table = $this->table;
             $obj->column = $c;
             $obj->modifier = $modifier;
             $this->_group[] = $obj;
@@ -1072,6 +1094,7 @@ class Xapp_Orm_Filter
         $obj = new XO();
         $obj->mask = true;
         $obj->type = __FUNCTION__;
+        $obj->table = $this->table;
         $obj->column = $column;
         $obj->value = $value;
         $obj->operator = $operator;
@@ -1105,6 +1128,7 @@ class Xapp_Orm_Filter
             $obj = new XO();
             $obj->mask = false;
             $obj->type = __FUNCTION__;
+            $obj->table = $this->table;
             $obj->column = $w;
             $obj->connector = (isset($connector[$i])) ? self::mapConnector($connector[$i]) : 'AND';
             $this->_where[] = $obj;

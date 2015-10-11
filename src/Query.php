@@ -413,6 +413,10 @@ abstract class Xapp_Orm_Query
         $field = (array)$field;
         foreach($field as $k => $v)
         {
+            if(!empty($v->table) && stripos($v->field, '.') === false)
+            {
+                $v->field = $v->table . '.' . $v->field;
+            }
             $sql[] = $this->wrap($v->field) . ((isset($v->alias)) ? " AS " . $this->wrap($v->alias) : "");
         }
         return implode(', ', $sql);
@@ -496,6 +500,10 @@ abstract class Xapp_Orm_Query
         $order = (array)$order;
         foreach($order as $o)
         {
+            if(!empty($o->table) && stripos($o->column, '.') === false)
+            {
+                $o->column = $o->table . '.' . $o->column;
+            }
             $sql[] = "{$this->wrap($o->column)} {$o->direction}";
         }
         return "ORDER BY " . implode(', ', $sql);
@@ -550,6 +558,10 @@ abstract class Xapp_Orm_Query
         $group = (array)$group;
         foreach($group as $g)
         {
+            if(!empty($g->table) && stripos($g->column, '.') === false)
+            {
+                $g->column = $g->table . '.' . $g->column;
+            }
             $sql[] = $this->wrap($g->column);
         }
         $last = end($group);
@@ -573,6 +585,7 @@ abstract class Xapp_Orm_Query
     protected function where($where, &$sql = array())
     {
         $where = (array)$where;
+
         for($i = 0; $i < sizeof($where); $i++)
         {
             if(is_array($where[$i]))
@@ -635,6 +648,11 @@ abstract class Xapp_Orm_Query
     {
         $where = (object)$where;
 
+        //make table.column combination if table is set
+        if(!empty($where->table) && stripos($where->column, '.') === false)
+        {
+            $where->column = $where->table . '.' . $where->column;
+        }
         //raw where clause
         if(strtolower($where->type) === 'whereraw')
         {
