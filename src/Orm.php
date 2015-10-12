@@ -1064,7 +1064,7 @@ class Xapp_Orm
                     }
                 }
             }else{
-                if(in_array($mode, array('select', 'optimize')))
+                if(in_array($mode, array('select', 'optimize', 'show')))
                 {
                     if(stripos($sql, 'LIMIT 1') !== false && !in_array($fetchmode, array(self::FETCH_COUNT, self::FETCH_ONE, self::FETCH_OBJECT)))
                     {
@@ -1088,7 +1088,7 @@ class Xapp_Orm
                     ob_end_clean();
                 }
 
-                if($mode === 'select')
+                if(in_array($mode, array('select', 'show')))
                 {
                     $rows = (int)$statement->rowCount();
                     if($fetchmode !== self::FETCH_COUNT && $rows === 0)
