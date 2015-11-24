@@ -119,12 +119,12 @@ abstract class Xapp_Orm_Query
         $sql[] = "INSERT INTO";
         if($filter->has('table'))
         {
-            $sql[] = $this->table($filter->get('table'), 'reset');
+            $sql[] = $this->table($filter, 'reset');
         }
         $sql[] = "SET";
         if($filter->has('bindings'))
         {
-            $sql[] = $this->bindings($filter->get('bindings'));
+            $sql[] = $this->bindings($filter);
         }
         return implode(' ', $sql);
     }
@@ -145,7 +145,7 @@ abstract class Xapp_Orm_Query
         $sql[] = "UPDATE";
         if($filter->has('table'))
         {
-            $sql[] = $this->table($filter->get('table'), 'reset');
+            $sql[] = $this->table($filter, 'reset');
         }
         $sql[] = "SET";
         if($filter->has('bindings'))
@@ -166,15 +166,15 @@ abstract class Xapp_Orm_Query
         }
         if($filter->has('where'))
         {
-            $sql[] = $this->where($filter->get('where'));
+            $sql[] = $this->where($filter);
         }
         if($filter->has('order'))
         {
-            $sql[] = $this->order($filter->get('order'));
+            $sql[] = $this->order($filter);
         }
         if($filter->has('limit'))
         {
-            $sql[] = $this->limit($filter->get('limit'));
+            $sql[] = $this->limit($filter);
         }
         return implode(' ', $sql);
     }
@@ -195,19 +195,19 @@ abstract class Xapp_Orm_Query
         $sql[] = "DELETE FROM";
         if($filter->has('table'))
         {
-            $sql[] = $this->table($filter->get('table'), 'reset');
+            $sql[] = $this->table($filter, 'reset');
         }
         if($filter->has('where'))
         {
-            $sql[] = $this->where($filter->get('where'));
+            $sql[] = $this->where($filter);
         }
         if($filter->has('order'))
         {
-            $sql[] = $this->order($filter->get('order'));
+            $sql[] = $this->order($filter);
         }
         if($filter->has('limit'))
         {
-            $sql[] = $this->limit($filter->get('limit'));
+            $sql[] = $this->limit($filter);
         }
         return implode(' ', $sql);
     }
@@ -232,38 +232,38 @@ abstract class Xapp_Orm_Query
         }
         if($filter->has('field'))
         {
-            $sql[] = $this->field($filter->get('field'));
+            $sql[] = $this->field($filter);
         }else{
             $sql[] = "*";
         }
         $sql[] = "FROM";
         if($filter->has('table'))
         {
-            $sql[] = $this->table($filter->get('table'));
+            $sql[] = $this->table($filter);
         }
         if($filter->has('join'))
         {
-            $sql[] = $this->join($filter->get('join'));
+            $sql[] = $this->join($filter);
         }
         if($filter->has('where'))
         {
-            $sql[] = $this->where($filter->get('where'));
+            $sql[] = $this->where($filter);
         }
         if($filter->has('group'))
         {
-            $sql[] = $this->group($filter->get('group'));
+            $sql[] = $this->group($filter);
         }
         if($filter->has('having'))
         {
-            $sql[] = $this->having($filter->get('having'));
+            $sql[] = $this->having($filter);
         }
         if($filter->has('order'))
         {
-            $sql[] = $this->order($filter->get('order'));
+            $sql[] = $this->order($filter);
         }
         if($filter->has('limit'))
         {
-            $sql[] = $this->limit($filter->get('limit'));
+            $sql[] = $this->limit($filter);
         }
         return implode(' ', $sql);
     }
@@ -382,14 +382,19 @@ abstract class Xapp_Orm_Query
      * filter class and iterate to build complete sql set syntax
      *
      * @error 13115
-     * @param mixed|array $bindings expects array of key => value parameter bindings
+     * @param mixed|Xapp_Orm_Filter $bindings expects filter object or array/object of key => values
      * @return string
      */
     protected function bindings($bindings)
     {
         $sql = array();
 
-        $bindings = (array)$bindings;
+        if($bindings instanceof Xapp_Orm_Filter)
+        {
+            $bindings = (array)$bindings->get('bindings');
+        }else{
+            $bindings = (array)$bindings;
+        }
         foreach($bindings as $k => $v)
         {
             $sql[] = "{$this->wrap($k)} = {$this->bind($k)}";
@@ -403,19 +408,24 @@ abstract class Xapp_Orm_Query
      * from filter class set field values containing field name/value and optional alias value
      *
      * @error 13116
-     * @param mixed|array $field expects array of field objects
+     * @param mixed|Xapp_Orm_Filter $field expects filter object or field array/object key => value pairs
      * @return string
      */
     protected function field($field)
     {
         $sql = array();
 
-        $field = (array)$field;
+        if($field instanceof Xapp_Orm_Filter)
+        {
+            $field = (array)$field->get('field');
+        }else{
+            $field = (array)$field;
+        }
         foreach($field as $k => $v)
         {
             if(!empty($v->table) && stripos($v->field, '.') === false)
             {
-                $v->field = $v->table . '.' . $v->field;
+                $v->field = $this->wrapTable($v->table, $v->field, $field);
             }
             $sql[] = $this->wrap($v->field) . ((isset($v->alias)) ? " AS " . $this->wrap($v->alias) : "");
         }
@@ -429,14 +439,14 @@ abstract class Xapp_Orm_Query
      * for single tables expects array pointer value to get either first or last table from collection
      *
      * @error 13117
-     * @param mixed|array $table expects array of table objects
+     * @param Xapp_Orm_Filter $filter expects filter object
      * @param null|string $pointer expects php array pointer function as string
      * @return string
      */
-    protected function table($table, $pointer = null)
+    protected function table(Xapp_Orm_Filter $filter, $pointer = null)
     {
         $sql = array();
-        $table = (array)$table;
+        $table = (array)$filter->get('table');
 
         if($pointer !== null)
         {
@@ -448,7 +458,7 @@ abstract class Xapp_Orm_Query
         }
         foreach($table as $k => $v)
         {
-            $sql[] = $this->wrap($v->table) . ((isset($v->alias)) ? " AS {$v->alias}" : "");
+            $sql[] = $this->wrap($v->table) . ((isset($v->alias)) ? " AS " . $this->wrap($v->alias) : "");
         }
         return implode(', ', $sql);
     }
@@ -470,12 +480,12 @@ abstract class Xapp_Orm_Query
      * build limit, offset part for mysql compatible query
      *
      * @error 13119
-     * @param object $limit expects limit object from filter class
+     * @param Xapp_Orm_Filter $filter expects filter object
      * @return string
      */
-    protected function limit($limit)
+    protected function limit(Xapp_Orm_Filter $filter)
     {
-        $limit = (object)$limit;
+        $limit = (object)$filter->get('limit');
         if(isset($limit->offset))
         {
             return "LIMIT {$limit->offset}, {$limit->limit}";
@@ -490,19 +500,19 @@ abstract class Xapp_Orm_Query
      * class
      *
      * @error 13120
-     * @param mixed|object $order expects order object from filter class
+     * @param Xapp_Orm_Filter $filter expects filter object
      * @return string
      */
-    protected function order($order)
+    protected function order(Xapp_Orm_Filter $filter)
     {
         $sql = array();
 
-        $order = (array)$order;
+        $order = (array)$filter->get('order');
         foreach($order as $o)
         {
             if(!empty($o->table) && stripos($o->column, '.') === false)
             {
-                $o->column = $o->table . '.' . $o->column;
+                $o->column = $this->wrapTable($o->table, $o->column, $filter);
             }
             $sql[] = "{$this->wrap($o->column)} {$o->direction}";
         }
@@ -516,14 +526,14 @@ abstract class Xapp_Orm_Query
      * here
      *
      * @error 13121
-     * @param mixed|array $join expects join objects from filter class
+     * @param Xapp_Orm_Filter $filter expects filter object
      * @return string
      */
-    protected function join($join)
+    protected function join(Xapp_Orm_Filter $filter)
     {
         $sql = array();
 
-        $join = (array)$join;
+        $join = (array)$filter->get('join');
         foreach($join as $j)
         {
             $tmp = array();
@@ -531,7 +541,7 @@ abstract class Xapp_Orm_Query
             {
                 foreach($j->getJoin() as $k => $v)
                 {
-                    $tmp[] = "{$this->whereMapper($v, false)} {$v->connector}";
+                    $tmp[] = "{$this->whereMapper($v, false, $filter)} {$v->connector}";
                 }
                 $tmp[sizeof($tmp) - 1] = trim(preg_replace('/(AND|OR|XOR)\s?$/', '', $tmp[sizeof($tmp) - 1]));
                 $tmp = trim(implode(' ', $tmp));
@@ -548,19 +558,19 @@ abstract class Xapp_Orm_Query
      * also modifiers in mysql modifier can be set only once at end of statement
      *
      * @error 13122
-     * @param array|mixed $group expects group objects
+     * @param Xapp_Orm_Filter $filter expects filter object
      * @return string
      */
-    protected function group($group)
+    protected function group(Xapp_Orm_Filter $filter)
     {
         $sql = array();
 
-        $group = (array)$group;
+        $group = (array)$filter->get('group');
         foreach($group as $g)
         {
             if(!empty($g->table) && stripos($g->column, '.') === false)
             {
-                $g->column = $g->table . '.' . $g->column;
+                $g->column = $this->wrapTable($g->table, $g->column, $filter);
             }
             $sql[] = $this->wrap($g->column);
         }
@@ -578,13 +588,13 @@ abstract class Xapp_Orm_Query
      * condition string for finally cleanup. subselects are nested by nature
      *
      * @error 13123
-     * @param mixed|array $where expects the where objects of filter class
+     * @param Xapp_Orm_Filter $filter expects filter object
      * @param array $sql is set through recursive calling
      * @return string
      */
-    protected function where($where, &$sql = array())
+    protected function where(Xapp_Orm_Filter $filter, &$sql = array())
     {
-        $where = (array)$where;
+        $where = (array)$filter->get('where');
 
         for($i = 0; $i < sizeof($where); $i++)
         {
@@ -602,7 +612,7 @@ abstract class Xapp_Orm_Query
                 {
                     $where[$i]->value = "(" . trim(trim($where[$i]->value), "()") . ")";
                 }
-                $sql[] = $this->whereMapper($where[$i]) . " " . (($i < sizeof($where) -1) ? $where[$i]->connector : "");
+                $sql[] = $this->whereMapper($where[$i], true, $filter) . " " . (($i < sizeof($where) -1) ? $where[$i]->connector : "");
             }
         }
         return "WHERE " . trim(preg_replace(array('/(AND|OR|XOR)\s?([\)]?)\s?$/i', '/\s+/i'), array('$2', ' '), trim(implode(' ', $sql))));
@@ -615,16 +625,16 @@ abstract class Xapp_Orm_Query
      * up in the end
      *
      * @error 13124
-     * @param mixed|array $having expects the having object from filter class
+     * @param Xapp_Orm_Filter $filter expects filter object
      * @return string
      */
-    protected function having($having)
+    protected function having(Xapp_Orm_Filter $filter)
     {
         $sql = array();
-        $having = (array)$having;
+        $having = (array)$filter->get('having');
         for($i = 0; $i < sizeof($having); $i++)
         {
-            $sql[] = $this->whereMapper($having[$i]) . " " . (($i < sizeof($having) -1) ? $having[$i]->connector : "");
+            $sql[] = $this->whereMapper($having[$i], true, $filter) . " " . (($i < sizeof($having) -1) ? $having[$i]->connector : "");
         }
         return "HAVING " . trim(preg_replace(array('/(AND|OR|XOR)\s?$/i', '/\s+/i'), array('', ' '), trim(implode(' ', $sql))));
     }
@@ -641,17 +651,18 @@ abstract class Xapp_Orm_Query
      * @error 13125
      * @param object $where expects the single where condition object from filter class
      * @param bool $mask defines whether to mask values for prepared statements or not
+     * @param Xapp_Orm_Filter $filter expects the filter object as reference
      * @return mixed|string
      * @throws Xapp_Orm_Query_Exception
      */
-    protected function whereMapper($where, $mask = true)
+    protected function whereMapper($where, $mask = true, Xapp_Orm_Filter $filter)
     {
         $where = (object)$where;
 
         //make table.column combination if table is set
         if(!empty($where->table) && stripos($where->column, '.') === false)
         {
-            $where->column = $where->table . '.' . $where->column;
+            $where->column = $this->wrapTable($where->table, $where->column, $filter);
         }
         //raw where clause
         if(strtolower($where->type) === 'whereraw')
@@ -875,6 +886,32 @@ abstract class Xapp_Orm_Query
         }else{
             return $this->wrap($value);
         }
+    }
+
+
+    /**
+     * wrap/join table and column values for full qualified sql table.column identifier only i column is not an alias set
+     * in filter field functions. alias columns names can not be wrapped!
+     *
+     * @error 13133
+     * @param string $table expects the table name
+     * @param string $column expects the column name
+     * @param null|Xapp_Orm_Filter $filter expects filter instance
+     * @return string
+     */
+    protected function wrapTable($table, $column, $filter = null)
+    {
+        if($filter !== null && $filter instanceof Xapp_Orm_Filter && $filter->has('field'))
+        {
+            foreach((array)$filter->get('field') as $field)
+            {
+                if(isset($field->alias) && strtolower((string)$field->alias) === strtolower((string)$column))
+                {
+                    return $column;
+                }
+            }
+        }
+        return  $table . '.' . $column;
     }
 
 
