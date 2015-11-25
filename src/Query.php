@@ -908,15 +908,16 @@ abstract class Xapp_Orm_Query
                 //check if expression has an alias
                 if($field->field instanceof Xapp_Orm_Expression)
                 {
-                    if(preg_match('=as\s+([^\s]{1,})=i', $field->field->expr(), $m))
+                    if(preg_match('=AS\s+([^\s]{1,})=i', $field->field->expr(), $m))
                     {
                         if(strtolower((string)$column) === strtolower(trim($m[1])))
                         {
                             return $column;
                         }
                     }
+                }
                 //check if field has an alias
-                }else if(isset($field->alias) && strtolower((string)$field->alias) === strtolower((string)$column)){
+                if(isset($field->alias) && strtolower((string)$field->alias) === strtolower((string)$column)){
                     return $column;
                 }
             }
