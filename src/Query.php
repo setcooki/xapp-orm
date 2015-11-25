@@ -588,20 +588,26 @@ abstract class Xapp_Orm_Query
      * condition string for finally cleanup. subselects are nested by nature
      *
      * @error 13123
-     * @param Xapp_Orm_Filter $filter expects filter object
+     * @param mixed|Xapp_Orm_Filter $where expects filter object or where arguments as array/object
      * @param array $sql is set through recursive calling
+     * @param null|Xapp_Orm_Filter $filter holds filter instance as reference
      * @return string
      */
-    protected function where(Xapp_Orm_Filter $filter, &$sql = array())
+    protected function where($where, &$sql = array(), &$filter = null)
     {
-        $where = (array)$filter->get('where');
-
+        if($where instanceof Xapp_Orm_Filter)
+        {
+            $filter = $where;
+            $where = (array)$where->get('where');
+        }else{
+            $where = (array)$where;
+        }
         for($i = 0; $i < sizeof($where); $i++)
         {
             if(is_array($where[$i]))
             {
                 $sql[] = "(";
-                $this->where($where[$i], $sql);
+                $this->where($where[$i], $sql, $filter);
                 $sql[] = ")";
                 if($where[$i][sizeof($where[$i]) -1] instanceof stdClass)
                 {
@@ -632,6 +638,7 @@ abstract class Xapp_Orm_Query
     {
         $sql = array();
         $having = (array)$filter->get('having');
+
         for($i = 0; $i < sizeof($having); $i++)
         {
             $sql[] = $this->whereMapper($having[$i], true, $filter) . " " . (($i < sizeof($having) -1) ? $having[$i]->connector : "");
