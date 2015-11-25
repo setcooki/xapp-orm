@@ -423,7 +423,7 @@ abstract class Xapp_Orm_Query
         }
         foreach($field as $k => $v)
         {
-            if(!empty($v->table) && stripos($v->field, '.') === false)
+            if(!empty($v->table) && is_string($v->field) && stripos($v->field, '.') === false)
             {
                 $v->field = $this->wrapTable($v->table, $v->field, $field);
             }
@@ -510,7 +510,7 @@ abstract class Xapp_Orm_Query
         $order = (array)$filter->get('order');
         foreach($order as $o)
         {
-            if(!empty($o->table) && stripos($o->column, '.') === false)
+            if(!empty($o->table) && is_string($o->column) && stripos($o->column, '.') === false)
             {
                 $o->column = $this->wrapTable($o->table, $o->column, $filter);
             }
@@ -568,7 +568,7 @@ abstract class Xapp_Orm_Query
         $group = (array)$filter->get('group');
         foreach($group as $g)
         {
-            if(!empty($g->table) && stripos($g->column, '.') === false)
+            if(!empty($g->table) && is_string($g->column) && stripos($g->column, '.') === false)
             {
                 $g->column = $this->wrapTable($g->table, $g->column, $filter);
             }
@@ -660,7 +660,7 @@ abstract class Xapp_Orm_Query
         $where = (object)$where;
 
         //make table.column combination if table is set
-        if(!empty($where->table) && stripos($where->column, '.') === false)
+        if(!empty($where->table) && is_string($where->column) && stripos($where->column, '.') === false)
         {
             $where->column = $this->wrapTable($where->table, $where->column, $filter);
         }
@@ -905,8 +905,18 @@ abstract class Xapp_Orm_Query
         {
             foreach((array)$filter->get('field') as $field)
             {
-                if(isset($field->alias) && strtolower((string)$field->alias) === strtolower((string)$column))
+                //check if expression has an alias
+                if($field->field instanceof Xapp_Orm_Expression)
                 {
+                    if(preg_match('=as\s+([^\s]{1,})=i', $field->field->expr(), $m))
+                    {
+                        if(strtolower((string)$column) === strtolower(trim($m[1])))
+                        {
+                            return $column;
+                        }
+                    }
+                //check if field has an alias
+                }else if(isset($field->alias) && strtolower((string)$field->alias) === strtolower((string)$column)){
                     return $column;
                 }
             }
