@@ -571,7 +571,7 @@ class Xapp_Orm
             {
                 $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING);
             }
-            if(xapp_is_option(self::TIMEOUT, $this));
+            if(xapp_is_option(self::TIMEOUT, $this))
             {
                 $this->pdo->setAttribute(PDO::ATTR_TIMEOUT, (int)xapp_get_option(self::TIMEOUT, $this));
             }
