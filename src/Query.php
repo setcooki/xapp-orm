@@ -96,10 +96,10 @@ abstract class Xapp_Orm_Query
             {
                 return new $class($connection);
             }else{
-                throw new Xapp_Orm_Query_Exception(xapp_sprintf(_("driver dependent query class: %s is not implemented"), $class), 1310201);
+                throw new Xapp_Orm_Query_Exception(xapp_sprintf(__("driver dependent query class: %s is not implemented"), $class), 1310201);
             }
         }else{
-            throw new Xapp_Orm_Query_Exception(_("connection instance can not be null"), 1310202);
+            throw new Xapp_Orm_Query_Exception(__("connection instance can not be null"), 1310202);
         }
     }
 
@@ -771,7 +771,7 @@ abstract class Xapp_Orm_Query
                     $return = "{$where->column} NOT BETWEEN {$where->value[0]} AND {$where->value[1]}";
                     break;
                 default:
-                    throw new Xapp_Orm_Query_Exception(xapp_sprintf(_("where condition operator: %s is not supported"), $where->operator), 1312501);
+                    throw new Xapp_Orm_Query_Exception(xapp_sprintf(__("where condition operator: %s is not supported"), $where->operator), 1312501);
             }
             return $return;
         }
@@ -815,7 +815,7 @@ abstract class Xapp_Orm_Query
                 $return = 'RIGHT OUTER JOIN';
                 break;
             default:
-                throw new Xapp_Orm_Query_Exception(xapp_sprintf(_("join expression type: %s is not supported"), $type), 1312601);
+                throw new Xapp_Orm_Query_Exception(xapp_sprintf(__("join expression type: %s is not supported"), $type), 1312601);
         }
         return $return;
     }

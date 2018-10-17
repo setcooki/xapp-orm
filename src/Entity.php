@@ -127,7 +127,7 @@ class Xapp_Orm_Entity
         {
             return call_user_func_array(array($model::instance(), 'save'), array($this));
         }else{
-            throw new Xapp_Orm_Entity_Exception(_("model for entity was not found"), 1381001);
+            throw new Xapp_Orm_Entity_Exception(__("model for entity was not found"), 1381001);
         }
     }
 
@@ -149,7 +149,7 @@ class Xapp_Orm_Entity
         {
             $this->$name = $value;
         }else{
-            throw new Xapp_Orm_Entity_Exception(xapp_sprintf(_("overloading entity with new properties is only allowed for dynamic instance of: %s"), __CLASS__), 1380501);
+            throw new Xapp_Orm_Entity_Exception(xapp_sprintf(__("overloading entity with new properties is only allowed for dynamic instance of: %s"), __CLASS__), 1380501);
         }
     }
 

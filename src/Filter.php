@@ -412,7 +412,7 @@ class Xapp_Orm_Filter
         {
             $this->_action = $action;
         }else{
-            throw new Xapp_Orm_Filter_Exception(_("only crud actions allowed in filter class"), 1360101);
+            throw new Xapp_Orm_Filter_Exception(__("only crud actions allowed in filter class"), 1360101);
         }
     }
 
@@ -603,7 +603,7 @@ class Xapp_Orm_Filter
                     $this->setBindings($column[$i], $value[$i]);
                 }
             }else{
-                throw new Xapp_Orm_Filter_Exception(_("values and columns/keys must have the same array length when binding"), 1361101);
+                throw new Xapp_Orm_Filter_Exception(__("values and columns/keys must have the same array length when binding"), 1361101);
             }
 
         }else if(is_array($column) && $value === null){
@@ -661,7 +661,7 @@ class Xapp_Orm_Filter
             }
             $this->_where[] = $obj;
         }else{
-            throw new Xapp_Orm_Filter_Exception(_("filter method: key not allowed for select statements"), 1361201);
+            throw new Xapp_Orm_Filter_Exception(__("filter method: key not allowed for select statements"), 1361201);
         }
         return $this;
     }
@@ -733,7 +733,7 @@ class Xapp_Orm_Filter
                 $join->on($column1, $operator, $column2);
                 $this->_join[] = $join;
             }else{
-                throw new Xapp_Orm_Filter_Exception(_("filter parameter \$column2 for joins must be set for single joins"), 1361401);
+                throw new Xapp_Orm_Filter_Exception(__("filter parameter \$column2 for joins must be set for single joins"), 1361401);
             }
         }
         return $this;
@@ -1218,7 +1218,7 @@ class Xapp_Orm_Filter
         {
             return $this->$what;
         }else{
-            throw new Xapp_Orm_Filter_Exception(xapp_sprintf(_("unable to get: %s since property does not exist"), $what), 1363201);
+            throw new Xapp_Orm_Filter_Exception(xapp_sprintf(__("unable to get: %s since property does not exist"), $what), 1363201);
         }
     }
 
@@ -1323,7 +1323,7 @@ class Xapp_Orm_Filter
                     $this->_bindings[trim(trim($name[$i]), ':')] = $value[$i];
                 }
             }else{
-                throw new Xapp_Orm_Filter_Exception(_("binding array values must have the same array length"));
+                throw new Xapp_Orm_Filter_Exception(__("binding array values must have the same array length"));
             }
         }else if(is_array($name) && $value === null){
             foreach($name as $k => $v)
@@ -1438,7 +1438,7 @@ class Xapp_Orm_Filter
             {
                 return $key;
             }else{
-                throw new Xapp_Orm_Filter_Exception(xapp_sprintf(_("operator: %s is not supported"), $operator), 1364201);
+                throw new Xapp_Orm_Filter_Exception(xapp_sprintf(__("operator: %s is not supported"), $operator), 1364201);
             }
         }else{
             return strtoupper($operator);
@@ -1467,7 +1467,7 @@ class Xapp_Orm_Filter
         {
             return strtoupper($connector);
         }else{
-            throw new Xapp_Orm_Filter_Exception(xapp_sprintf(_("connector: %s is not supported"), $connector), 1364301);
+            throw new Xapp_Orm_Filter_Exception(xapp_sprintf(__("connector: %s is not supported"), $connector), 1364301);
         }
     }
 

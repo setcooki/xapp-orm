@@ -479,7 +479,7 @@ class Xapp_Orm
             {
                 $this->database = trim($m[1]);
             }else{
-                throw new Xapp_Orm_Exception(_("no database selected in dsn string"), 1290103);
+                throw new Xapp_Orm_Exception(__("no database selected in dsn string"), 1290103);
             }
             if($password !== null)
             {
@@ -496,12 +496,12 @@ class Xapp_Orm
                 $this->init();
                 self::$_connection = self::$_connections[$name] = $this;
             }else{
-                throw new Xapp_Orm_Exception(xapp_sprintf(_("the pdo driver in dsn: %s is not supported by the system"), $dsn), 1290102);
+                throw new Xapp_Orm_Exception(xapp_sprintf(__("the pdo driver in dsn: %s is not supported by the system"), $dsn), 1290102);
             }
         }
         catch(PDOException $e)
         {
-            throw new Xapp_Orm_Exception(xapp_sprintf(_("pdo error: %d, %s"), $e->getCode(), $e->getMessage()), 1290101);
+            throw new Xapp_Orm_Exception(xapp_sprintf(__("pdo error: %d, %s"), $e->getCode(), $e->getMessage()), 1290101);
         }
     }
 
@@ -544,7 +544,7 @@ class Xapp_Orm
         }
         catch(PDOException $e)
         {
-            throw new Xapp_Orm_Exception(xapp_sprintf(_("pdo error: %d, %s"), $e->getCode(), $e->getMessage()), 1290201);
+            throw new Xapp_Orm_Exception(xapp_sprintf(__("pdo error: %d, %s"), $e->getCode(), $e->getMessage()), 1290201);
         }
     }
 
@@ -578,7 +578,7 @@ class Xapp_Orm
         }
         catch(PDOException $e)
         {
-            throw new Xapp_Orm_Exception(xapp_sprintf(_("pdo error: %d, %s"), $e->getCode(), $e->getMessage()), 1290301);
+            throw new Xapp_Orm_Exception(xapp_sprintf(__("pdo error: %d, %s"), $e->getCode(), $e->getMessage()), 1290301);
         }
     }
 
@@ -607,13 +607,13 @@ class Xapp_Orm
                 {
                     return new $driver($options, $name, $password);
                 }else{
-                    throw new Xapp_Orm_Exception(xapp_sprintf(_("driver class for driver: %s is not implemented"), $driver), 1290402);
+                    throw new Xapp_Orm_Exception(xapp_sprintf(__("driver class for driver: %s is not implemented"), $driver), 1290402);
                 }
             }else{
                 return self::$_connection = self::$_connections[$name];
             }
         }else{
-            throw new Xapp_Orm_Exception(xapp_sprintf(_("driver: %s is not supported by this system"), $driver), 1290401);
+            throw new Xapp_Orm_Exception(xapp_sprintf(__("driver: %s is not supported by this system"), $driver), 1290401);
         }
     }
 
@@ -670,13 +670,13 @@ class Xapp_Orm
                         {
                             return self::factory($m[1], $name, $options, $password);
                         }else{
-                            throw new Xapp_Orm_Exception(xapp_sprintf(_("concrete driver implementation for: %s does not exist"), $driver), 1290603);
+                            throw new Xapp_Orm_Exception(xapp_sprintf(__("concrete driver implementation for: %s does not exist"), $driver), 1290603);
                         }
                     }else{
-                        throw new Xapp_Orm_Exception(xapp_sprintf(_("driver in: %s is not supported by system"), $options[self::DSN]), 1290602);
+                        throw new Xapp_Orm_Exception(xapp_sprintf(__("driver in: %s is not supported by system"), $options[self::DSN]), 1290602);
                     }
                 }else{
-                    throw new Xapp_Orm_Exception(_("dsn string in class options must be set when creating new connection"), 1290601);
+                    throw new Xapp_Orm_Exception(__("dsn string in class options must be set when creating new connection"), 1290601);
                 }
             }else{
                 return self::$_connection = self::$_connections[$name];
@@ -701,7 +701,7 @@ class Xapp_Orm
         {
             return self::$_connection = self::$_connections[$name];
         }else{
-            throw new Xapp_Orm_Exception(xapp_sprintf(_("connection: %s is not set"), $name), 1290701);
+            throw new Xapp_Orm_Exception(xapp_sprintf(__("connection: %s is not set"), $name), 1290701);
         }
     }
 
@@ -734,10 +734,10 @@ class Xapp_Orm
             catch(Exception $e)
             {
                 self::rollback();
-                throw new Xapp_Orm_Exception(xapp_sprintf(_("transaction error: %d, %s"), $e->getCode(), $e->getMessage()), 1290802);
+                throw new Xapp_Orm_Exception(xapp_sprintf(__("transaction error: %d, %s"), $e->getCode(), $e->getMessage()), 1290802);
             }
         }else{
-            throw new Xapp_Orm_Exception(_("first parameter callback must be a valid callback"), 1290801);
+            throw new Xapp_Orm_Exception(__("first parameter callback must be a valid callback"), 1290801);
         }
     }
 
@@ -764,12 +764,12 @@ class Xapp_Orm
             {
                 self::connection()->pdo->beginTransaction();
             }else{
-                throw new Xapp_Orm_Exception(_("transaction is already active and can not be started"), 1290902);
+                throw new Xapp_Orm_Exception(__("transaction is already active and can not be started"), 1290902);
             }
         }
         catch(PDOException $e)
         {
-            throw new Xapp_Orm_Exception(xapp_sprintf(_("pdo error: %d, %s"), $e->getCode(), $e->getMessage()), 1290901);
+            throw new Xapp_Orm_Exception(xapp_sprintf(__("pdo error: %d, %s"), $e->getCode(), $e->getMessage()), 1290901);
         }
     }
 
@@ -793,7 +793,7 @@ class Xapp_Orm
         }
         catch(PDOException $e)
         {
-            throw new Xapp_Orm_Exception(xapp_sprintf(_("pdo error: %d, %s"), $e->getCode(), $e->getMessage()), 1291001);
+            throw new Xapp_Orm_Exception(xapp_sprintf(__("pdo error: %d, %s"), $e->getCode(), $e->getMessage()), 1291001);
         }
     }
 
@@ -817,7 +817,7 @@ class Xapp_Orm
         }
         catch(PDOException $e)
         {
-            throw new Xapp_Orm_Exception(xapp_sprintf(_("pdo error: %d, %s"), $e->getCode(), $e->getMessage()), 1291101);
+            throw new Xapp_Orm_Exception(xapp_sprintf(__("pdo error: %d, %s"), $e->getCode(), $e->getMessage()), 1291101);
         }
     }
 
@@ -893,7 +893,7 @@ class Xapp_Orm
         }
         catch(PDOException $e)
         {
-            throw new Xapp_Orm_Exception(xapp_sprintf(_("pdo error: %d, %s"), $e->getCode(), $e->getMessage()), 1291501);
+            throw new Xapp_Orm_Exception(xapp_sprintf(__("pdo error: %d, %s"), $e->getCode(), $e->getMessage()), 1291501);
         }
     }
 
@@ -975,7 +975,7 @@ class Xapp_Orm
         {
             return $this->execute($arguments[0], ((isset($arguments[1])) ? $arguments[1] : null), constant($mode), ((isset($arguments[2])) ? $arguments[2] : null));
         }else{
-            throw new Xapp_Orm_Exception(_("overloading only allowed for direct query calls of class fetch modes"), 1291901);
+            throw new Xapp_Orm_Exception(__("overloading only allowed for direct query calls of class fetch modes"), 1291901);
         }
     }
 
@@ -1050,10 +1050,10 @@ class Xapp_Orm
                         }
                         if($statement->execute() === false)
                         {
-                            throw new Xapp_Orm_Exception(_("unable to execute pdo statement"), 1292001);
+                            throw new Xapp_Orm_Exception(__("unable to execute pdo statement"), 1292001);
                         }
                     }else{
-                        throw new Xapp_Orm_Exception(_("unable to prepare pdo statement"), 1292002);
+                        throw new Xapp_Orm_Exception(__("unable to prepare pdo statement"), 1292002);
                     }
                 }else{
                     if(in_array($mode, array('select', 'optimize')))
@@ -1095,7 +1095,7 @@ class Xapp_Orm
                     {
                         if(xapp_get_option(self::ERROR_MODE, $this) === self::ERROR_MODE_EXCEPTION)
                         {
-                            throw new Xapp_Result_Exception(_("query returned empty result"), 1292006);
+                            throw new Xapp_Result_Exception(__("query returned empty result"), 1292006);
                         }else{
                             return false;
                         }
@@ -1132,7 +1132,7 @@ class Xapp_Orm
                                     {
                                         $res = $res[$fetcharg];
                                     }else{
-                                        throw new Xapp_Orm_Exception(_("unable to fetch one column value since column index does not exist"), 1292003);
+                                        throw new Xapp_Orm_Exception(__("unable to fetch one column value since column index does not exist"), 1292003);
                                     }
                                 }else{
                                     $res = $res[0];
@@ -1173,7 +1173,7 @@ class Xapp_Orm
                                 {
                                     $res = $statement->fetchAll(PDO::FETCH_FUNC, $fetcharg);
                                 }else{
-                                    throw new Xapp_Orm_Exception(_("fetch function must be of type callable and valid"), 1292004);
+                                    throw new Xapp_Orm_Exception(__("fetch function must be of type callable and valid"), 1292004);
                                 }
                                 break;
                             case self::FETCH_SCROLL:
@@ -1194,10 +1194,10 @@ class Xapp_Orm
                                             }
                                             $res = $tmp;
                                         }else{
-                                            throw new Xapp_Orm_Exception(_("fetch mode paired arguments are not valid valid keys"), 1292008);
+                                            throw new Xapp_Orm_Exception(__("fetch mode paired arguments are not valid valid keys"), 1292008);
                                         }
                                     }else{
-                                        throw new Xapp_Orm_Exception(_("fetch mode paired with fetch arguments expects array with two values"), 1292007);
+                                        throw new Xapp_Orm_Exception(__("fetch mode paired with fetch arguments expects array with two values"), 1292007);
                                     }
                                 }else{
                                     $res = $statement->fetchAll(PDO::FETCH_NUM);
@@ -1242,7 +1242,7 @@ class Xapp_Orm
         }
         catch(PDOException $e)
         {
-            throw new Xapp_Orm_Exception(xapp_sprintf(_("pdo error: %d, %s"), $e->getCode(), $e->getMessage()), 1292005);
+            throw new Xapp_Orm_Exception(xapp_sprintf(__("pdo error: %d, %s"), $e->getCode(), $e->getMessage()), 1292005);
         }
     }
 
@@ -1280,7 +1280,7 @@ class Xapp_Orm
             $this->_table = null;
             return $return;
         }else{
-            throw new Xapp_Orm_Exception(_("table must be set prior to using this function"), 1292201);
+            throw new Xapp_Orm_Exception(__("table must be set prior to using this function"), 1292201);
         }
 
     }
@@ -1303,7 +1303,7 @@ class Xapp_Orm
             $this->_table = null;
             return $return;
         }else{
-            throw new Xapp_Orm_Exception(_("table must be set prior to using this function"), 1292301);
+            throw new Xapp_Orm_Exception(__("table must be set prior to using this function"), 1292301);
         }
     }
 
@@ -1325,7 +1325,7 @@ class Xapp_Orm
             $this->_table = null;
             return $return;
         }else{
-            throw new Xapp_Orm_Exception(_("table must be set prior to using this function"), 1292401);
+            throw new Xapp_Orm_Exception(__("table must be set prior to using this function"), 1292401);
         }
     }
 
@@ -1347,7 +1347,7 @@ class Xapp_Orm
             $this->_table = null;
             return $return;
         }else{
-            throw new Xapp_Orm_Exception(_("table must be set prior to using this function"), 1292501);
+            throw new Xapp_Orm_Exception(__("table must be set prior to using this function"), 1292501);
         }
     }
 
@@ -1367,7 +1367,7 @@ class Xapp_Orm
             $this->_table = null;
             return $return;
         }else{
-            throw new Xapp_Orm_Exception(_("table must be set prior to using this function"), 1292601);
+            throw new Xapp_Orm_Exception(__("table must be set prior to using this function"), 1292601);
         }
     }
 
@@ -1387,7 +1387,7 @@ class Xapp_Orm
             $this->_table = null;
             return $return;
         }else{
-            throw new Xapp_Orm_Exception(_("table must be set prior to using this function"), 1292701);
+            throw new Xapp_Orm_Exception(__("table must be set prior to using this function"), 1292701);
         }
     }
 
@@ -1407,7 +1407,7 @@ class Xapp_Orm
             $this->_table = null;
             return $return;
         }else{
-            throw new Xapp_Orm_Exception(_("table must be set prior to using this function"), 1292801);
+            throw new Xapp_Orm_Exception(__("table must be set prior to using this function"), 1292801);
         }
     }
 
@@ -1427,7 +1427,7 @@ class Xapp_Orm
             $this->_table = null;
             return $return;
         }else{
-            throw new Xapp_Orm_Exception(_("table must be set prior to using this function"), 1292901);
+            throw new Xapp_Orm_Exception(__("table must be set prior to using this function"), 1292901);
         }
     }
 
@@ -1740,12 +1740,12 @@ class Xapp_Orm
             $m[1] = strtolower(trim($m[1]));
             if((bool)xapp_get_option(self::ALLOW_ONLY_CRUD, $this) && !in_array($m[1], array('insert', 'update', 'select', 'delete')))
             {
-                throw new Xapp_Orm_Exception(_("only crud operation allowed for this database instance"), 1294001);
+                throw new Xapp_Orm_Exception(__("only crud operation allowed for this database instance"), 1294001);
             }else{
                 return $m[1];
             }
         }else{
-            throw new Xapp_Orm_Exception(_("unable to detect database action from sql string"), 1294002);
+            throw new Xapp_Orm_Exception(__("unable to detect database action from sql string"), 1294002);
         }
     }
 
@@ -1798,7 +1798,7 @@ class Xapp_Orm
             }else if($log instanceof Xapp_Log_Interface){
                 $log->log($tmp1);
             }else{
-                throw new Xapp_Orm_Exception(_("unable to write to log file since log option value is not recognized"), 1294301);
+                throw new Xapp_Orm_Exception(__("unable to write to log file since log option value is not recognized"), 1294301);
             }
         }
     }

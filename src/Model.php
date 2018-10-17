@@ -68,7 +68,7 @@ abstract class Xapp_Orm_Model extends Xapp_Orm_Observer implements Xapp_Orm_Obse
         $class = get_class($this);
         if(xapp_property_exists($class, 'model') && $class !== $class::$model)
         {
-            throw new Xapp_Orm_Model_Exception(xapp_sprintf(_("calling model class must be instance of: %s"), $class::$model), 1370101);
+            throw new Xapp_Orm_Model_Exception(xapp_sprintf(__("calling model class must be instance of: %s"), $class::$model), 1370101);
         }
         if($connection !== null)
         {
@@ -111,7 +111,7 @@ abstract class Xapp_Orm_Model extends Xapp_Orm_Observer implements Xapp_Orm_Obse
             }
             return self::$_instances[$class];
         }else{
-            throw new Xapp_Orm_Model_Exception(_("model can not be instantiated by abstract model base class"), 1370201);
+            throw new Xapp_Orm_Model_Exception(__("model can not be instantiated by abstract model base class"), 1370201);
         }
     }
 
@@ -350,7 +350,7 @@ abstract class Xapp_Orm_Model extends Xapp_Orm_Observer implements Xapp_Orm_Obse
             {
                 $mixed = $mixed->toArray();
             }else{
-                throw new Xapp_Orm_Model_Exception(xapp_sprintf(_("can not populate values from: %s since entity must be of same class as entity to populate"), get_class($mixed)), 1371001);
+                throw new Xapp_Orm_Model_Exception(xapp_sprintf(__("can not populate values from: %s since entity must be of same class as entity to populate"), get_class($mixed)), 1371001);
             }
         }
         foreach((object)$mixed as $k => $v)
@@ -430,7 +430,7 @@ abstract class Xapp_Orm_Model extends Xapp_Orm_Observer implements Xapp_Orm_Obse
 
             return $return;
         }else{
-            throw new Xapp_Orm_Model_Exception(_("insert is not allowed since entity does already exist"), 1371201);
+            throw new Xapp_Orm_Model_Exception(__("insert is not allowed since entity does already exist"), 1371201);
         }
     }
 
@@ -473,7 +473,7 @@ abstract class Xapp_Orm_Model extends Xapp_Orm_Observer implements Xapp_Orm_Obse
 
             return $return;
         }else{
-            throw new Xapp_Orm_Model_Exception(_("update is not allowed since entity does not exist"), 1371301);
+            throw new Xapp_Orm_Model_Exception(__("update is not allowed since entity does not exist"), 1371301);
         }
     }
 
@@ -503,10 +503,10 @@ abstract class Xapp_Orm_Model extends Xapp_Orm_Observer implements Xapp_Orm_Obse
                 $id = (int)$mixed;
                 if($id === 0)
                 {
-                    throw new Xapp_Orm_Model_Exception(_("primary key value 0 is not valid for delete operation"), 1371401);
+                    throw new Xapp_Orm_Model_Exception(__("primary key value 0 is not valid for delete operation"), 1371401);
                 }
             }else{
-                throw new Xapp_Orm_Model_Exception(_("primary key value must be a numeric value - delete action aborted"), 1371402);
+                throw new Xapp_Orm_Model_Exception(__("primary key value must be a numeric value - delete action aborted"), 1371402);
             }
             $filter = Xapp_Orm_Filter::delete($this->getTable())->key($this->getKey() ,$id)->limit(1);
         }else{
@@ -567,7 +567,7 @@ abstract class Xapp_Orm_Model extends Xapp_Orm_Observer implements Xapp_Orm_Obse
             $e = $this->getEntity();
             if(!($entity instanceof $e))
             {
-                throw new Xapp_Orm_Model_Exception(_("the passed entity does not belong to this model"), 1371701);
+                throw new Xapp_Orm_Model_Exception(__("the passed entity does not belong to this model"), 1371701);
             }
         }
     }
