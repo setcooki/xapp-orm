@@ -387,9 +387,9 @@ class Xapp_Orm
         self::PERSISTENT            => XAPP_TYPE_BOOL,
         self::CHARSET               => XAPP_TYPE_STRING,
         self::DEBUG                 => XAPP_TYPE_BOOL,
-        self::PDO_OPTIONS           => XAPP_TYPE_ARRAY,
+        self::PDO_OPTIONS           => XAPP_TYPE_MIXED,
         self::ERROR_MODE            => XAPP_TYPE_INT,
-        self::PDO_ATTRIBUTES        => XAPP_TYPE_ARRAY,
+        self::PDO_ATTRIBUTES        => XAPP_TYPE_MIXED,
         self::TIMEOUT               => XAPP_TYPE_INT,
         self::TABLE_PREFIX          => XAPP_TYPE_STRING,
         self::LOG                   => array(XAPP_TYPE_FILE, 'Xapp_Log_Interface'),
@@ -562,7 +562,7 @@ class Xapp_Orm
         {
             if(xapp_is_option(self::PDO_ATTRIBUTES, $this))
             {
-                foreach(xapp_get_option(self::PDO_ATTRIBUTES, $this) as $k => $v)
+                foreach((array)xapp_get_option(self::PDO_ATTRIBUTES, $this) as $k => $v)
                 {
                     $this->pdo->setAttribute((int)$k, $v);
                 }
